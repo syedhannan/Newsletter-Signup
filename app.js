@@ -35,10 +35,15 @@ app.post("/", function (req, res) {
   const url = "https://us20.api.mailchimp.com/3.0/lists/870b1893f1";
   const options = {
     method: "POST",
-    auth: "hannan:b5029fb1499ce650f869530e508758d2-us20",
+    auth: "hannan:b5029fb1499ce650f869530e508758d2-us20", //Enter the API key after the colon here
   };
 
   const request = https.request(url, options, function (response) {
+    if (response.statusCode === 200) {
+      res.sendFile(__dirname + "/success.html");
+    } else {
+      res.sendFile(__dirname + "/failure.html");
+    }
     response.on("data", function (data) {
       console.log(JSON.parse(data));
     });
@@ -46,8 +51,10 @@ app.post("/", function (req, res) {
   request.write(jsonData);
   request.end();
 });
+
+app.post("/failure", function (req, res) {
+  res.redirect("/");
+});
 app.listen(3000, function () {
   console.log("Server is running on port 3000");
 });
-// api key b5029fb1499ce650f869530e508758d2-us20
-//audience id 870b1893f1
